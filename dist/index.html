@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#05080c" />
+    <title>HALO INFINITE — Ringfall Protocol</title>
+    <script type="module" crossorigin src="/assets/index-C8PLr7YR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-R7tT80wA.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game" aria-label="Halo Infinite Ringfall game viewport"></canvas>
+
+      <div id="grade"></div>
+      <div id="vignette"></div>
+      <div id="damage-flash"></div>
+      <div id="shield-flash"></div>
+      <div id="scanlines"></div>
+
+      <div id="hud" class="hidden" aria-live="polite">
+        <div id="objective-panel">
+          <div class="eyebrow"><span class="diamond"></span> UNSC // FIREBASE LIBERALITY</div>
+          <div id="objective-text">ELIMINATE THE BANISHED</div>
+          <div class="objective-meta">
+            <span id="wave-text">WAVE 01</span>
+            <span id="hostile-text">HOSTILES 0</span>
+          </div>
+        </div>
+
+        <div id="score-panel">
+          <div class="score-cell"><span>SCORE</span><strong id="score">0</strong></div>
+          <div class="score-cell"><span>KILLS</span><strong id="kill-count">0</strong></div>
+          <div class="score-cell"><span>ACCURACY</span><strong id="accuracy">--</strong></div>
+        </div>
+
+        <div id="vitals">
+          <div id="shield-shell" class="meter-shell">
+            <div id="shield-fill" class="meter-fill"></div>
+            <div class="meter-segments"></div>
+            <div class="meter-frame"></div>
+          </div>
+          <div id="health-shell" class="meter-shell health">
+            <div id="health-fill" class="meter-fill"></div>
+            <div class="meter-frame"></div>
+          </div>
+          <div id="vitals-label"><span id="spartan-tag">SPARTAN-117</span><span id="shield-pct">100%</span></div>
+        </div>
+
+        <div id="killfeed"></div>
+
+        <div id="radar-panel">
+          <div class="radar-header"><span>MOTION TRACKER</span><i class="radar-live"></i></div>
+          <div class="radar-disc">
+            <canvas id="radar" width="220" height="220"></canvas>
+          </div>
+          <div class="radar-footer"><span>RNG 40M</span><span>ONLINE</span></div>
+        </div>
+
+        <div id="weapon-panel">
+          <div class="weapon-top">
+            <span id="weapon-name">MA40 ASSAULT RIFLE</span>
+            <span id="fire-mode">AUTO</span>
+          </div>
+          <div class="ammo-line">
+            <strong id="ammo">36</strong>
+            <span class="ammo-divider">/</span>
+            <span id="reserve">216</span>
+          </div>
+          <div class="weapon-bottom">
+            <span>KINETIC // 7.62MM</span>
+            <div id="grenade-pips" aria-label="Frag grenades"></div>
+          </div>
+        </div>
+
+        <div id="crosshair" class="crosshair">
+          <i class="ch-top"></i><i class="ch-right"></i><i class="ch-bottom"></i><i class="ch-left"></i>
+          <span class="ch-dot"></span>
+        </div>
+        <div id="hitmarker"><i></i><i></i><i></i><i></i></div>
+
+        <div id="reload-indicator">
+          <div class="reload-ring"></div>
+          <span>RELOADING</span>
+        </div>
+
+        <div id="banner" class="hidden">
+          <div class="banner-rule"></div>
+          <div id="banner-eyebrow" class="eyebrow">ZETA HALO // COMBAT ZONE</div>
+          <h1 id="banner-title">WAVE 01</h1>
+          <p id="banner-sub">BANISHED SIGNATURES DETECTED</p>
+          <div class="banner-rule"></div>
+        </div>
+
+        <div id="prompt"></div>
+
+        <div id="control-hints">
+          <span><b>WASD</b> MOVE</span>
+          <span><b>SHIFT</b> SPRINT</span>
+          <span><b>RMB</b> ZOOM</span>
+          <span><b>R</b> RELOAD</span>
+          <span><b>F</b> MELEE</span>
+          <span><b>G</b> GRENADE</span>
+        </div>
+      </div>
+
+      <div id="click-hint" class="hidden">CLICK TO CAPTURE MOUSE</div>
+
+      <div id="menu" class="screen">
+        <div class="menu-grid"></div>
+        <div class="menu-top">
+          <div class="brand"><span class="brand-mark"></span> UNSC // INFINITY</div>
+          <div class="menu-meta">
+            <span>SECTOR 07</span>
+            <span class="meta-sep"></span>
+            <span>ZETA HALO</span>
+            <span class="meta-sep"></span>
+            <span class="online"><i></i> LINK STABLE</span>
+          </div>
+        </div>
+
+        <div class="menu-content">
+          <div class="hero">
+            <div class="hero-kicker">THE MASTER CHIEF PROTOCOL</div>
+            <h1 class="title">
+              <span class="title-halo">HALO</span>
+              <span class="title-infinite">INFINITE</span>
+            </h1>
+            <div class="hero-sub">RINGFALL <span>//</span> SURVIVAL DIRECTIVE</div>
+            <p class="hero-copy">
+              The Banished have overrun Firebase Liberality. Hold the ring fragment,
+              break their assault waves, and give the UNSC a foothold on Zeta Halo.
+            </p>
+            <div class="menu-actions">
+              <button id="start-button" type="button" class="start-button" aria-label="Start Game">
+                <span class="btn-glow"></span>
+                <span class="btn-label">START GAME</span>
+                <span class="btn-sub">DEPLOY TO RING SURFACE</span>
+              </button>
+              <div class="key-hint"><kbd>ENTER</kbd> TO DEPLOY</div>
+            </div>
+          </div>
+
+          <aside class="brief">
+            <div class="brief-head"><span>MISSION BRIEF</span><span>OP // 09</span></div>
+            <div class="brief-row"><span>LOCATION</span><strong>ZETA HALO // INSTALLATION 07</strong></div>
+            <div class="brief-row"><span>FACTION</span><strong class="red">BANISHED</strong></div>
+            <div class="brief-row"><span>LOADOUT</span><strong>MA40 // FRAG GRENADE</strong></div>
+            <div class="brief-row"><span>THREAT</span><strong class="amber">SEVERE</strong></div>
+            <div class="brief-objective">
+              <span class="diamond"></span>
+              <div>
+                <small>PRIMARY OBJECTIVE</small>
+                <p>SURVIVE THE BANISHED ASSAULT</p>
+              </div>
+            </div>
+            <div class="controls">
+              <div><kbd>W A S D</kbd><span>MOVE</span></div>
+              <div><kbd>MOUSE</kbd><span>LOOK / FIRE</span></div>
+              <div><kbd>SHIFT</kbd><span>SPRINT</span></div>
+              <div><kbd>SPACE</kbd><span>JUMP</span></div>
+              <div><kbd>R</kbd><span>RELOAD</span></div>
+              <div><kbd>G</kbd><span>GRENADE</span></div>
+              <div><kbd>F</kbd><span>MELEE</span></div>
+              <div><kbd>ESC</kbd><span>RELEASE MOUSE</span></div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="menu-footer">
+          <span>UNOFFICIAL FAN-MADE BROWSER TRIBUTE // THREE.JS WEBGL</span>
+          <span class="footer-right">BUILD 26.10.28 <i></i> SWIFTSHADER READY</span>
+        </div>
+      </div>
+
+      <div id="death-screen" class="screen hidden">
+        <div class="death-panel">
+          <div class="death-eyebrow">SPARTAN SIGNAL LOST</div>
+          <h1>KILLED IN ACTION</h1>
+          <div class="death-stats">
+            <div><span>WAVES SURVIVED</span><strong id="death-wave">0</strong></div>
+            <div><span>BANISHED ELIMINATED</span><strong id="death-kills">0</strong></div>
+            <div><span>FINAL SCORE</span><strong id="death-score">0</strong></div>
+            <div><span>ACCURACY</span><strong id="death-accuracy">0%</strong></div>
+          </div>
+          <button id="redeploy-button" type="button" class="start-button" aria-label="Redeploy"><span class="btn-label">REDEPLOY</span><span class="btn-sub">RETURN TO RING SURFACE</span></button>
+        </div>
+      </div>
+
+      <div id="mobile-controls" class="hidden">
+        <div id="joystick"><div id="joystick-knob"></div></div>
+        <div class="touch-actions">
+          <button id="touch-fire" class="touch-btn fire" type="button" aria-label="Fire">FIRE</button>
+          <button id="touch-reload" class="touch-btn small" type="button" aria-label="Reload">R</button>
+          <button id="touch-grenade" class="touch-btn small" type="button" aria-label="Grenade">G</button>
+          <button id="touch-jump" class="touch-btn small" type="button" aria-label="Jump">JMP</button>
+        </div>
+      </div>
+
+      <div id="boot-error" class="hidden"></div>
+    </div>
+  </body>
+</html>
